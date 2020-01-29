@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<header id="header">
+	<img src="./images/tsunago.png" alt="">
+
+</header>
+<head>
+  <title>小売店</title>
+  <link rel="stylesheet" type="text/css" href="market.css">
+</head>
+<hr>
+<h1>TSUNAGO</h1>
+<hr>
+
+<body>
+  <!-- HTML -->
+  <div id="app">
+    <!--  登録する  -->
+    <div id="resist">
+      <h2>商品の登録しよう</h2>
+      <h2>登録情報</h2>
+      <div id="inner">
+        <p>
+          <label>商品画像 : 
+            <input type="file" id="file" @change="fileChange">
+          </label>
+        </p>
+        <p v-if="img">
+          preview:<br>
+          <img style="width:200px" :src="img">
+        </p>
+        <p>
+          <label>商品名 : <input type="text" v-model="tagName"></label><br>
+          <label for="category">商品カテゴリー : </label>
+          <select id="category" v-model="category">
+            <option selected>その他</option>
+            <option>お惣菜🍙</option>
+            <option>パン🍞</option>
+            <option>生鮮食品🍅</option>
+            <option>お菓子🍭</option>
+            <option>日配食品🐄</option>
+          </select>
+          <br>
+          <label>価格 : 
+            <input type="text" v-model="price">
+          </label><br>
+          <label for="discount">割引率 : </label>
+          <select id="discount" v-model="discount">
+            <option selected>定価</option>
+            <option>10%OFF</option>
+            <option>20%OFF</option>
+            <option>30%OFF</option>
+            <option>50%OFF</option>
+            <option>セール価格</option>
+          </select><br>
+          <label>廃棄予定日 : 
+            <input type="date" v-model="deadline">
+          </label>
+          <br>
+          <label>販売場所 : <input type="text" v-model="overView"></label>
+        </p>
+        <!--  登録ボタン  -->
+        <button class="btn" @click="registBtn()">登録！</button>
+      </div>
+    </div>
+    <hr>
+    <!--  表示する  -->
+    <h2>登録された商品</h2>
+    <table class="hyouji">
+      <tr>
+        <th>商品画像</th>
+        <th>商品名</th>
+        <th>商品カテゴリー</th>
+        <th>価格</th>
+        <th>割引率</th>
+        <th>廃棄期限</th>
+        <th>販売場所</th>
+      </tr>
+      <tr v-for="d in data">
+        <td>
+          <img style="width:100px" :src="d.img">
+        </td>
+        <td>
+          {{d.tagName}}
+        </td>
+        <td>
+          {{d.category}}
+        </td>
+        <td>
+          {{d.price}}円
+        </td>
+        <td>
+          {{d.discount}}
+        </td>
+        <td>
+          {{d.deadline}}
+        </td>
+        <td>
+          {{d.overView}}
+        </td>
+      </tr>
+    </table>
+    
+    <hr>
+    <button @click="clearData()">localStorageクリア</button>
+    <button @click="viewData()">dataプロパティのコンソール表示</button>
+  </div>
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+
+    // 2回連続同じ画像ファイルをアップロードしようとしたとき対策
+    window.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('file').addEventListener('click', function(e) {
+        this.value = null;
+      });
+    });
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        data: [],
+        tagName: '',
+        category: 'その他',
+        price: '',
+        discount: '定価',
+        deadline: '',
+        overView: '',
+        searchedTag: '',
+        photo: '',
+        img: '',
+        prevImg: ''
+      },
+      mounted: function () {
+        let savedata = JSON.parse(localStorage.getItem('save'));
+        if (savedata != null) {
+          this.data = JSON.parse(localStorage.getItem('save'));
+        }
+      },
+      methods: {
+        registBtn: function () {
+
+          // localStorageに格納
+          this.data.push({
+            img: this.img,
+            tagName: this.tagName,
+            category: this.category,
+            price: this.price,
+            discount: this.discount,
+            deadline: this.deadline,
+            overView: this.overView
+          });
+          localStorage.setItem('save', JSON.stringify(this.data));
+
+          // 格納したら用済み
+          this.img = '';
+          this.tagName = '';
+          this.category = 'その他';
+          this.price = '';
+          this.discount = '定価';
+          this.deadline = '';
+          this.overView = '';
+        },
+
+        // localStorageのデータ確認・削除用
+        clearData: function () {
+          localStorage.removeItem('save');
+        },
+        viewData: function () {
+          console.log('this.data:');
+          console.log(this.data);
+        },
+
+        // 画像データの取得
+        fileChange: function (ev) {
+          /*
+            引数としてinputエレメントが取得できる（これはFileReader APIとは関係ない）
+            引数.target.filesオブジェクトがアップロードされた各ファイルの情報
+          */
+
+          // 以下のサンプルではファイルが一つしかアップロードされていないことを前提としている
+          let file = ev.target.files[0];
+
+          // アップロードをキャンセルとかするとundefinedが入る
+          if (file == undefined) {
+            return;
+          }
+
+          // 他にもいろいろと属性がある（サイズとか）
+          if (!file.type.match('image.*')) {
+            alert('選択できるファイル形式は画像だけです。');
+            return;
+          }
+
+          /*
+            ここからFileReader APIによるファイルの詳細情報の読み込み
+            img要素のsrc属性に設定するURLはFileReader経由でしか取得できない（同階層にある画像はfile.nameでも取れるが、フォルダに入っている画像などは無理）
+          */
+          let reader = new FileReader();
+          /*
+            ファイル情報の読み込みが終わってからしか使えないのでonloadメソッドの中でデータを取得する（ロードが終わったファイル情報は引数で受け取る）
+          */
+          reader.onload = (f) => {
+            this.img = f.target.result;
+          };
+
+          // ココでファイルを読み込んで、上のonloadが実行される感じ（たぶん）
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  </script>
+</body>
