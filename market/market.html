@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
-<header id="header">
-	<img src="./images/tsunago.png" alt="">
-
-</header>
 <head>
   <title>小売店</title>
   <link rel="stylesheet" type="text/css" href="market.css">
+  <style>
+    .book-true {
+      background-color:bisque;
+    }
+  </style>
 </head>
-<hr>
-<h1>TSUNAGO</h1>
-<hr>
-
 <body>
-  <!-- HTML -->
+  <header id="header">
+    <img src="./images/tsunago.png" alt="">
+  </header>
+    <hr>
+  <h1>TSUNAGO</h1>
+  <hr>
+    <!-- HTML -->
   <div id="app">
     <!--  登録する  -->
     <div id="resist">
@@ -66,6 +69,7 @@
     <hr>
     <!--  表示する  -->
     <h2>登録された商品</h2>
+    <p>予約された商品は<span style="background-color:bisque">背景色</span>が変わります。</p>
     <table class="hyouji">
       <tr>
         <th>商品画像</th>
@@ -76,28 +80,14 @@
         <th>廃棄期限</th>
         <th>販売場所</th>
       </tr>
-      <tr v-for="d in data">
-        <td>
-          <img style="width:100px" :src="d.img">
-        </td>
-        <td>
-          {{d.tagName}}
-        </td>
-        <td>
-          {{d.category}}
-        </td>
-        <td>
-          {{d.price}}円
-        </td>
-        <td>
-          {{d.discount}}
-        </td>
-        <td>
-          {{d.deadline}}
-        </td>
-        <td>
-          {{d.overView}}
-        </td>
+      <tr v-for="d in data" :class="'book-'+d.booked">
+        <td><img style="width:100px" :src="d.img"></td>
+        <td>{{d.tagName}}</td>
+        <td>{{d.category}}</td>
+        <td>{{d.price}}円</td>
+        <td>{{d.discount}}</td>
+        <td>{{d.deadline}}</td>
+        <td>{{d.overView}}</td>
       </tr>
     </table>
     
@@ -148,7 +138,9 @@
             price: this.price,
             discount: this.discount,
             deadline: this.deadline,
-            overView: this.overView
+            overView: this.overView,
+            booked: false,
+            uid: Math.random().toString(36).slice(-8) // 商品ID
           });
           localStorage.setItem('save', JSON.stringify(this.data));
 

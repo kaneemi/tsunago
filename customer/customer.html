@@ -1,123 +1,166 @@
 <!DOCTYPE html>
 <html>
-​
 
 <head>
-    <title>顧客</title>
-    <link rel="stylesheet" type="text/css" href="customer.css">
+  <title>顧客</title>
+  <link rel="stylesheet" type="text/css" href="customer.css">
 </head>
-<hr>
-<h1>TSUNAGO</h1>
-<hr>
 ​
+<!-- HTML -->
 
 <body>
-    <!-- HTML -->
-    <div id="app" style="width:100%">
-        <!-- <header id="header">
-      <img src="images/top.jpg" alt="">
-      <div id="slogan">
-        <h1>TSUNAGO</h1>
-      </div>
-    </header> -->
+  <hr>
+  <h1>TSUNAGO</h1>
+  <hr>
+  <div id="app" style="width:100%">
 
-        <h2>商品リスト</h2>
-        <div class="search">
-            <input type="text" v-model="searchedTag">
-            <button @click="search">検索🔍</button>
-            <button @click="cancel">キャンセル</button>
-        </div>
-        <table>
-             <!--searchModeは検索ボタンを押すまでリストを表示させる。検索ボタンが押されるとtrue、キャンセルボタンが押されるかフォームが空欄になったらfalseになる。
+  <div v-if="data.some(d => d.booked === true)">
+    <h2>予約済</h2>
+    <table>
+      <!--searchModeは検索ボタンを押すまでリストを表示させる。検索ボタンが押されるとtrue、キャンセルボタンが押されるかフォームが空欄になったらfalseになる。
+               d.tagName.indexOf(searchedTag)は、tagNameの中にsearchedTagが含まれなかったら-1を返す -->
+  
+      <template v-for="(d, i) in bookedData">
+        <tr>
+          <td rowspan="5" style="text-align: center;">
+            <img style="width:200px" :src="d.img">
+          </td>
+          <td>商品名：{{d.tagName}}</td>
+        </tr>
+        <tr>
+          <td>商品カテゴリ：{{d.category}}</td>
+        </tr>
+        <tr>
+          <td>廃棄予定日：{{d.deadline}}</td>
+        </tr>
+        <tr>
+          <td>価格：{{d.price}}円（{{d.discount}}）</td>
+        </tr>
+        <tr>
+          <td>販売場所：{{d.overView}}</td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: center;">
+            <button @click="cancelReserve(d.uid)">キャンセル</button>
+          </td>
+        </tr>
+        <tr>
+          <td class="space" colspan="2">&nbsp;</td>
+        </tr>
+      </template>
+    </table>  
+  </div>
+  
+  <h2>商品リスト</h2>
+  <div class="search">
+    <input type="text" v-model="searchedTag">
+    <button @click="search">検索🔍</button>
+    <button @click="cancelSearch">キャンセル</button>
+  </div>
+  <table>
+    <!--searchModeは検索ボタンを押すまでリストを表示させる。検索ボタンが押されるとtrue、キャンセルボタンが押されるかフォームが空欄になったらfalseになる。
              d.tagName.indexOf(searchedTag)は、tagNameの中にsearchedTagが含まれなかったら-1を返す -->
 
-            <template v-for="(d, i) in data" v-if="(!searchMode) || searchMode && d.tagName.indexOf(searchedTag) != -1">
-                <tr>
-                    <td rowspan="5" style="text-align: center;">
-                        <img style="width:200px" :src="d.img">
-                    </td>
-                    <td>
-                        商品名：{{d.tagName}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        商品カテゴリ：{{d.category}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        廃棄予定日：{{d.deadline}}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        価格：{{d.price}}円（{{d.discount}}）
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        販売場所：{{d.overView}}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: center;">
-                        <button @click="reserve(i)">予約</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="space" colspan="2">&nbsp;</td>
-                </tr>
-            </template>
-        </table>
-    </div>
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        let app = new Vue({
-            el: '#app',
-            data: {
-                data: [],
-                searchedTag: '',
-                searchMode: false
-            },
-            mounted: function() {
-                let savedata = JSON.parse(localStorage.getItem('save'));
-                if (savedata != null) {
-                    this.data = JSON.parse(localStorage.getItem('save'));
-                }
-            },
-            methods: {
-                reserve: function(i) {
-                    let conf = window.confirm('本当に予約しますか？');
-                    if (!conf) {
-                        return;
-                    }
-                    console.log(this.data[i]);
-                    this.data.splice(i, 1);
-                    localStorage.setItem('save', JSON.stringify(this.data));
-                },
+    <template v-for="(d, i) in unbookedData"
+      v-if="!searchMode || searchMode && d.tagName.indexOf(searchedTag) != -1">
+      <tr>
+        <td rowspan="5" style="text-align: center;">
+          <img style="width:200px" :src="d.img">
+        </td>
+        <td>商品名：{{d.tagName}}</td>
+      </tr>
+      <tr>
+        <td>商品カテゴリ：{{d.category}}</td>
+      </tr>
+      <tr>
+        <td>廃棄予定日：{{d.deadline}}</td>
+      </tr>
+      <tr>
+        <td>価格：{{d.price}}円（{{d.discount}}）</td>
+      </tr>
+      <tr>
+        <td>販売場所：{{d.overView}}</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center;">
+          <button @click="reserve(d.uid)">予約</button>
+        </td>
+      </tr>
+      <tr>
+        <td class="space" colspan="2">&nbsp;</td>
+      </tr>
+    </template>
+  </table>
+  </div>
 
-                search: function() {
-                    this.searchMode = true;
-                },
-
-                cancel: function() {
-                    this.searchMode = false;
-                    this.searchedTag = '';
-                }
-            },
-
-            /* watchプロパティは、変数が変更されるたびに呼び出される関数を定義できる */
-            watch: {
-                // searchedTagが変更されると呼び出される（検索文字がすべて消されたら検索モードをやめる）
-                searchedTag: function() {
-                    if (this.searchedTag == '') {
-                        this.searchMode = false;
-                    }
-                }
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    let app = new Vue({
+      el: '#app',
+      data: {
+        data: [],
+        searchedTag: '',
+        searchMode: false
+      },
+      mounted: function () {
+        let savedata = JSON.parse(localStorage.getItem('save'));
+        if (savedata != null) {
+          this.data = JSON.parse(localStorage.getItem('save'));
+        }
+      },
+      methods: {
+        reserve: function (uid) {
+          let conf = window.confirm('本当に予約しますか？');
+          if (!conf) {
+            return;
+          }
+          this.data.forEach(d => {
+            if (d.uid === uid) {
+              d.booked = true;
             }
-        });
+          });
+          localStorage.setItem('save', JSON.stringify(this.data));
+        },
 
-    </script>
+        cancelReserve: function (uid) {
+          this.data.forEach(d => {
+            if (d.uid === uid) {
+              d.booked = false;
+            }
+          });
+          localStorage.setItem('save', JSON.stringify(this.data));
+        },
+
+        search: function () {
+          this.searchMode = true;
+        },
+
+        cancelSearch: function () {
+          this.searchMode = false;
+          this.searchedTag = '';
+        }
+      },
+
+      computed: {
+        unbookedData: function() {
+          return this.data.filter(d => !d.booked);
+        },
+        bookedData: function() {
+          return this.data.filter(d => d.booked);
+        }
+      },
+
+      /* watchプロパティは、変数が変更されるたびに呼び出される関数を定義できる */
+      watch: {
+        // searchedTagが変更されると呼び出される（検索文字がすべて消されたら検索モードをやめる）
+        searchedTag: function () {
+          if (this.searchedTag == '') {
+            this.searchMode = false;
+          }
+        }
+      }
+    });
+
+  </script>
 </body>
