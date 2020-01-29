@@ -1,5 +1,4 @@
 body {
-  background-color: azure;
   font: 14px/1.9 'Noto Sans JP', Arial, Verdana, 游ゴシック, YuGothic, 'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', メイリオ, Meiryo, sans-serif;
   font-weight: 300;
   -webkit-text-size-adjust: 100%;
@@ -43,4 +42,148 @@ table, td, th {
 
 th {
   background-color: beige;
+}
+
+/*--------------------------------------
+テキスト 02
+---------------------------------------*/
+
+.msr_text_02 {
+  padding-bottom: 0px;
+  width: 460px;
+}
+.msr_text_02  label {
+  display: block;
+  font-size: 14px;
+  padding-bottom: 5px;
+}
+.msr_text_02 input[type=text] {
+  border: 1px solid #1B73BA;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  color: #333;
+  font-size: 13px;
+  padding: 10px;
+  height: 40px;
+  width: 460px;
+}
+/*--------------------------------------
+テキスト 03
+---------------------------------------*/
+
+.msr_text_03 {
+  padding-bottom: 0px;
+  width: 460px;
+}
+.msr_text_03  label {
+  display: block;
+  font-size: 14px;
+  padding-bottom: 5px;
+}
+.msr_text_03 input[type=text] {
+  border: 1px solid #1B73BA;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  color: #333;
+  font-size: 13px;
+  padding: 10px;
+  height: 40px;
+  width: 260px;
+}
+
+/*--------------------------------------
+プルダウン
+---------------------------------------*/
+
+.msr_pulldown_02 {
+  padding-bottom: 0px;
+  position: relative;
+  width: 230px;
+}
+.msr_pulldown_02 p {
+  font-size: 14px;
+  padding-bottom: 5px;
+}
+.msr_pulldown_02 select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: url(./images/msr02_pulldown_btn01.png) no-repeat right;
+  border-top: 1px solid  #1B73BA;
+  border-bottom: 1px solid  #1B73BA;
+  border-left: 1px solid  #1B73BA;
+  border-right: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  cursor: pointer;
+  color: #333;
+  text-indent: .01px;
+  text-overflow: "";
+  padding: 10px;
+  height: 40px;
+  width: 230px;
+}
+
+
+
+/*--------------------------------------
+ファイル選択
+---------------------------------------*/
+
+.msr_file_02 {
+  padding-bottom: 20px;
+  width: 460px;
+}
+.msr_file_02>p {
+  font-size: 14px;
+  padding-bottom: 5px;
+}
+.msr_filebox_02 {
+  position: relative;
+}
+.msr_filebox_02 input[type=file] {
+  display: none;
+}
+.msr_filebox_02 label {
+  border: 1px solid #1B73BA;
+  cursor: pointer;
+  font-size: 14px;
+  display: block;
+  position: relative;
+  padding: 10px;
+  height: 20px;
+  width: 460px;
+}
+.msr_filebox_02 label:before {
+  background: #1B73BA;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  content: "Browse...";
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 10px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 40px;
+  width: 99px;
+}
+/*--------------------------------------
+送信ボタン
+---------------------------------------*/
+.btn {
+  margin-left: 10px
+  display: inline-block;
+  padding: 0.5em 2em;
+  text-decoration: none;
+  color: #1B73BA;
+  border: double 6px #1B73BA;
+  border-radius: 3px;
+  transition: .4s;
 }

@@ -1,72 +1,92 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>小売店</title>
   <link rel="stylesheet" type="text/css" href="market.css">
   <style>
     .book-true {
-      background-color:bisque;
+      background-color: bisque;
     }
+
   </style>
 </head>
+
 <body>
   <header id="header">
     <img src="./images/tsunago.png" alt="">
   </header>
-    <hr>
+  <hr>
   <h1>TSUNAGO</h1>
   <hr>
-    <!-- HTML -->
+  <!-- HTML -->
   <div id="app">
     <!--  登録する  -->
     <div id="resist">
-      <h2>商品の登録しよう</h2>
       <h2>登録情報</h2>
       <div id="inner">
-        <p>
-          <label>商品画像 : 
-            <input type="file" id="file" @change="fileChange">
-          </label>
-        </p>
-        <p v-if="img">
-          preview:<br>
-          <img style="width:200px" :src="img">
-        </p>
-        <p>
-          <label>商品名 : <input type="text" v-model="tagName"></label><br>
-          <label for="category">商品カテゴリー : </label>
-          <select id="category" v-model="category">
-            <option selected>その他</option>
-            <option>お惣菜🍙</option>
-            <option>パン🍞</option>
-            <option>生鮮食品🍅</option>
-            <option>お菓子🍭</option>
-            <option>日配食品🐄</option>
-          </select>
-          <br>
-          <label>価格 : 
-            <input type="text" v-model="price">
-          </label><br>
-          <label for="discount">割引率 : </label>
-          <select id="discount" v-model="discount">
-            <option selected>定価</option>
-            <option>10%OFF</option>
-            <option>20%OFF</option>
-            <option>30%OFF</option>
-            <option>50%OFF</option>
-            <option>セール価格</option>
-          </select><br>
-          <label>廃棄予定日 : 
-            <input type="date" v-model="deadline">
-          </label>
-          <br>
-          <label>販売場所 : <input type="text" v-model="overView"></label>
-        </p>
-        <!--  登録ボタン  -->
-        <button class="btn" @click="registBtn()">登録！</button>
+        <div class="msr_filebox_02">
+          <p>商品画像 :</p>
+            <label>
+              <input type="file" id="file" @change="fileChange">
+            </label>
+          <p v-if="img">
+            preview:<br>
+            <img style="width:200px" :src="img">
+          </p>
+        </div>
+          <div class="msr_text_02">
+            <p>商品名 : </p>
+            <label><input type="text" v-model="tagName"></label>
+        </div>
+        <div class="msr_pulldown_02">
+          <p>商品カテゴリー : </p>
+            <label for="category"></label>
+            <select id="category" v-model="category">
+              <option selected>その他</option>
+              <option>お惣菜🍙</option>
+              <option>パン🍞</option>
+              <option>生鮮食品🍅</option>
+              <option>お菓子🍭</option>
+              <option>日配食品🐄</option>
+            </select>
+        </div>
+        <div class="msr_text_03">
+          <p>価格 :</p>  
+          <label>
+              <input type="text" v-model="price">
+            円</label>
+        </div>
+        <div class="msr_pulldown_02">
+          <p>割引率 : </p>
+            <label for="discount"></label>
+            <select id="discount" v-model="discount" name="msr_02_pulldown01">
+              <option selected>定価</option>
+              <option>10%OFF</option>
+              <option>20%OFF</option>
+              <option>30%OFF</option>
+              <option>50%OFF</option>
+              <option>セール価格</option>
+            </select>
+        </div>
+        <div class="msr_pulldown_02">
+          <p>廃棄予定日 :</p>  
+          <label>
+              <input type="date" v-model="deadline">
+            </label>
+        </div>
+            <div class="msr_text_02">
+            <p>販売場所 : </p>
+              <label><input type="text" v-model="overView"></label>
+        </div><br>
+
+          <!--  登録ボタン  -->
+     
+          <button class="btn" @click="registBtn()" >登録！</button>
+        <br>
       </div>
     </div>
-    <hr>
+    <br><hr>
     <!--  表示する  -->
     <h2>登録された商品</h2>
     <p>予約された商品は<span style="background-color:bisque">背景色</span>が変わります。</p>
@@ -90,7 +110,7 @@
         <td>{{d.overView}}</td>
       </tr>
     </table>
-    
+
     <hr>
     <button @click="clearData()">localStorageクリア</button>
     <button @click="viewData()">dataプロパティのコンソール表示</button>
@@ -98,9 +118,8 @@
   <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script>
-
     // 2回連続同じ画像ファイルをアップロードしようとしたとき対策
-    window.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('DOMContentLoaded', function() {
       document.getElementById('file').addEventListener('click', function(e) {
         this.value = null;
       });
@@ -121,14 +140,14 @@
         img: '',
         prevImg: ''
       },
-      mounted: function () {
+      mounted: function() {
         let savedata = JSON.parse(localStorage.getItem('save'));
         if (savedata != null) {
           this.data = JSON.parse(localStorage.getItem('save'));
         }
       },
       methods: {
-        registBtn: function () {
+        registBtn: function() {
 
           // localStorageに格納
           this.data.push({
@@ -155,16 +174,16 @@
         },
 
         // localStorageのデータ確認・削除用
-        clearData: function () {
+        clearData: function() {
           localStorage.removeItem('save');
         },
-        viewData: function () {
+        viewData: function() {
           console.log('this.data:');
           console.log(this.data);
         },
 
         // 画像データの取得
-        fileChange: function (ev) {
+        fileChange: function(ev) {
           /*
             引数としてinputエレメントが取得できる（これはFileReader APIとは関係ない）
             引数.target.filesオブジェクトがアップロードされた各ファイルの情報
@@ -201,5 +220,6 @@
         }
       }
     });
+
   </script>
 </body>
